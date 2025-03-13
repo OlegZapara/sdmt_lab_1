@@ -2,7 +2,7 @@
 
 This application solves quadratic equations of the form *ax² + bx + c = 0*.
 
-## Build the application
+## Build the Application
 
 ### Prerequisites
 Ensure you have [Rust](https://www.rust-lang.org/) installed on your system.
@@ -18,7 +18,7 @@ cd sdmt_lab_1
 cargo build --release
 ```
 
-## Run the application
+## Run the Application
 
 ### Interactive Mode (Default)
 Run the application without any arguments to enter interactive mode:
@@ -39,5 +39,5 @@ The file should contain the coefficients *a*, *b*, and *c* on a single line, sep
 ```
 This represents the quadratic equation: *1.0 \* x ^ 2 - 3.0 \* x + 2.0 = 0*.
 
-## Revert commit
+## Revert Commit
 As per the instructions, this repository contains a [revert commit](https://github.com/vitaliichyhryn/sdmt_lab_1/commit/f6f928ea061453ba9f4b3326876320513a6c33ab).
