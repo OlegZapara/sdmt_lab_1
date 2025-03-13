@@ -33,6 +33,9 @@ fn get_coefficients_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn
     let mut values = contents.split_whitespace().map(str::parse);
 
     let a = values.next().ok_or("missing coefficient a")??;
+    if a == 0.0 {
+        return Err("coefficient a should be non-zero".into());
+    }
     let b = values.next().ok_or("missing coefficient b")??;
     let c = values.next().ok_or("missing coefficient c")??;
 
@@ -57,6 +60,9 @@ fn main() {
     } else {
         let a = loop {
             match get_coefficient("a") {
+                Ok(val) if val == 0.0 => {
+                    eprintln!("Error: coefficient a should be non-zero")
+                }
                 Ok(val) => break val,
                 Err(err) => {
                     eprintln!("Error: {err}")
