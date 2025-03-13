@@ -1,4 +1,4 @@
-use std::{error, io};
+use std::{env, error, fs, io, process};
 
 fn get_discriminant(a: f64, b: f64, c: f64) -> f64 {
     b.powi(2) - 4.0 * a * c
@@ -28,32 +28,60 @@ fn get_coefficient(name: &str) -> Result<f64, Box<dyn error::Error>> {
     Ok(a)
 }
 
+fn get_coefficients_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
+    let contents = fs::read_to_string(filename)?;
+    let mut values = contents.split_whitespace().map(str::parse);
+
+    let a = values.next().ok_or("missing coefficient a")??;
+    let b = values.next().ok_or("missing coefficient b")??;
+    let c = values.next().ok_or("missing coefficient c")??;
+
+    Ok((a, b, c))
+}
+
 fn main() {
-    let a: f64 = loop {
-        match get_coefficient("a") {
-            Ok(val) => break val,
-            Err(err) => {
-                println!("Error: {err}")
-            }
-        }
-    };
+    let args: Vec<String> = env::args().collect();
 
-    let b: f64 = loop {
-        match get_coefficient("b") {
-            Ok(val) => break val,
+    let (a, b, c) = if args.len() > 2 {
+        eprintln!("Usage: {} [filename]", args[0]);
+        process::exit(1);
+    } else if args.len() == 2 {
+        let filename = &args[1];
+        match get_coefficients_from_file(filename) {
+            Ok(vals) => vals,
             Err(err) => {
-                println!("Error: {err}")
+                eprintln!("Error: {err}");
+                process::exit(1);
             }
         }
-    };
+    } else {
+        let a = loop {
+            match get_coefficient("a") {
+                Ok(val) => break val,
+                Err(err) => {
+                    eprintln!("Error: {err}")
+                }
+            }
+        };
 
-    let c: f64 = loop {
-        match get_coefficient("c") {
-            Ok(val) => break val,
-            Err(err) => {
-                println!("Error: {err}")
+        let b = loop {
+            match get_coefficient("b") {
+                Ok(val) => break val,
+                Err(err) => {
+                    eprintln!("Error: {err}")
+                }
             }
-        }
+        };
+
+        let c = loop {
+            match get_coefficient("c") {
+                Ok(val) => break val,
+                Err(err) => {
+                    eprintln!("Error: {err}")
+                }
+            }
+        };
+        (a, b, c)
     };
 
     println!("Equation: ({a}) * x ^ 2 + ({b}) * x + ({c})");
