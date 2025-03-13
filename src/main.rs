@@ -17,15 +17,15 @@ fn get_quadratic_equation_roots(a: f64, b: f64, c: f64) -> (Option<f64>, Option<
     }
 }
 
-fn get_coefficient(name: &str) -> Result<f64, Box<dyn error::Error>> {
+fn get_coefficient_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> {
     println!("Enter coefficient {name}: ");
 
-    let mut a = String::new();
-    io::stdin().read_line(&mut a)?;
+    let mut val = String::new();
+    io::stdin().read_line(&mut val)?;
 
-    let a: f64 = a.trim().parse()?;
+    let val: f64 = val.trim().parse()?;
 
-    Ok(a)
+    Ok(val)
 }
 
 fn get_coefficients_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
@@ -59,7 +59,7 @@ fn main() {
         }
     } else {
         let a = loop {
-            match get_coefficient("a") {
+            match get_coefficient_from_stdin("a") {
                 Ok(val) if val == 0.0 => {
                     eprintln!("Error: coefficient a should be non-zero")
                 }
@@ -71,7 +71,7 @@ fn main() {
         };
 
         let b = loop {
-            match get_coefficient("b") {
+            match get_coefficient_from_stdin("b") {
                 Ok(val) => break val,
                 Err(err) => {
                     eprintln!("Error: {err}")
@@ -80,7 +80,7 @@ fn main() {
         };
 
         let c = loop {
-            match get_coefficient("c") {
+            match get_coefficient_from_stdin("c") {
                 Ok(val) => break val,
                 Err(err) => {
                     eprintln!("Error: {err}")
