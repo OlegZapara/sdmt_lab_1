@@ -1,4 +1,3 @@
-use core::f64;
 use std::{error, io};
 
 fn get_discriminant(a: f64, b: f64, c: f64) -> f64 {
