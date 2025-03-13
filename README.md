@@ -38,6 +38,3 @@ The file should contain the coefficients *a*, *b*, and *c* on a single line, sep
 1.0 -3.0 2.0
 ```
 This represents the quadratic equation: *1.0 \* x ^ 2 - 3.0 \* x + 2.0 = 0*.
-
-## License
-This project is open-source and available under the MIT License.
