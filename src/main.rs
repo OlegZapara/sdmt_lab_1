@@ -31,6 +31,23 @@ fn get_coef_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> {
     }
 }
 
+fn get_coefs_from_stdin() -> (f64, f64, f64) {
+    let coef_names = ["a", "b", "c"];
+    let mut coefs = coef_names.iter().map(|&name| loop {
+        match get_coef_from_stdin(name) {
+            Ok(val) => break val,
+            Err(err) => {
+                eprintln!("Error: {err}")
+            }
+        }
+    });
+    (
+        coefs.next().expect("Should have coefficient a"),
+        coefs.next().expect("Should have coefficient b"),
+        coefs.next().expect("Should have coefficient c"),
+    )
+}
+
 fn get_coefs_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
     let contents = fs::read_to_string(filename)?;
     let mut values = contents.split_whitespace().map(str::parse);
@@ -49,22 +66,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     let (a, b, c) = match args.len() {
-        1 => {
-            let coef_names = ["a", "b", "c"];
-            let mut coefs = coef_names.iter().map(|&name| loop {
-                match get_coef_from_stdin(name) {
-                    Ok(val) => break val,
-                    Err(err) => {
-                        eprintln!("Error: {err}")
-                    }
-                }
-            });
-            (
-                coefs.next().expect("Should have coefficient a"),
-                coefs.next().expect("Should have coefficient b"),
-                coefs.next().expect("Should have coefficient c"),
-            )
-        }
+        1 => get_coefs_from_stdin(),
         2 => {
             let filename = &args[1];
             match get_coefs_from_file(filename) {
