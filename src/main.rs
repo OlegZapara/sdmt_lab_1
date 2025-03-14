@@ -24,8 +24,11 @@ fn get_coefficient_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> 
     io::stdin().read_line(&mut val)?;
 
     let val: f64 = val.trim().parse()?;
-
-    Ok(val)
+    if name == "a" && val == 0.0 {
+        Err("coefficient a should be non-zero".into())
+    } else {
+        Ok(val)
+    }
 }
 
 fn get_coefficients_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
@@ -58,36 +61,20 @@ fn main() {
             }
         }
     } else {
-        let a = loop {
-            match get_coefficient_from_stdin("a") {
-                Ok(val) if val == 0.0 => {
-                    eprintln!("Error: coefficient a should be non-zero")
-                }
+        let coefficient_names = ["a", "b", "c"];
+        let mut coefficients = coefficient_names.iter().map(|&name| loop {
+            match get_coefficient_from_stdin(name) {
                 Ok(val) => break val,
                 Err(err) => {
                     eprintln!("Error: {err}")
                 }
             }
-        };
-
-        let b = loop {
-            match get_coefficient_from_stdin("b") {
-                Ok(val) => break val,
-                Err(err) => {
-                    eprintln!("Error: {err}")
-                }
-            }
-        };
-
-        let c = loop {
-            match get_coefficient_from_stdin("c") {
-                Ok(val) => break val,
-                Err(err) => {
-                    eprintln!("Error: {err}")
-                }
-            }
-        };
-        (a, b, c)
+        });
+        (
+            coefficients.next().expect("Should have coefficient a"),
+            coefficients.next().expect("Should have coefficient b"),
+            coefficients.next().expect("Should have coefficient c"),
+        )
     };
 
     println!("Equation: ({a}) * x ^ 2 + ({b}) * x + ({c})");
