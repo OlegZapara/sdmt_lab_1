@@ -48,33 +48,37 @@ fn get_coefs_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error:
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let (a, b, c) = if args.len() > 2 {
-        eprintln!("Usage: {} [filename]", args[0]);
-        process::exit(1);
-    } else if args.len() == 2 {
-        let filename = &args[1];
-        match get_coefs_from_file(filename) {
-            Ok(vals) => vals,
-            Err(err) => {
-                eprintln!("Error: {err}");
-                process::exit(1);
-            }
+    let (a, b, c) = match args.len() {
+        1 => {
+            let coef_names = ["a", "b", "c"];
+            let mut coefs = coef_names.iter().map(|&name| loop {
+                match get_coef_from_stdin(name) {
+                    Ok(val) => break val,
+                    Err(err) => {
+                        eprintln!("Error: {err}")
+                    }
+                }
+            });
+            (
+                coefs.next().expect("Should have coefficient a"),
+                coefs.next().expect("Should have coefficient b"),
+                coefs.next().expect("Should have coefficient c"),
+            )
         }
-    } else {
-        let coef_names = ["a", "b", "c"];
-        let mut coefs = coef_names.iter().map(|&name| loop {
-            match get_coef_from_stdin(name) {
-                Ok(val) => break val,
+        2 => {
+            let filename = &args[1];
+            match get_coefs_from_file(filename) {
+                Ok(vals) => vals,
                 Err(err) => {
-                    eprintln!("Error: {err}")
+                    eprintln!("Error: {err}");
+                    process::exit(1);
                 }
             }
-        });
-        (
-            coefs.next().expect("Should have coefficient a"),
-            coefs.next().expect("Should have coefficient b"),
-            coefs.next().expect("Should have coefficient c"),
-        )
+        }
+        _ => {
+            eprintln!("Usage: {} [filename]", args[0]);
+            process::exit(1);
+        }
     };
 
     println!("Equation: ({a}) * x ^ 2 + ({b}) * x + ({c})");
