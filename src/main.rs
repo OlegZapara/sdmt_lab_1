@@ -17,7 +17,7 @@ fn get_quadratic_equation_roots(a: f64, b: f64, c: f64) -> (Option<f64>, Option<
     }
 }
 
-fn get_coefficient_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> {
+fn get_coef_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> {
     println!("Enter coefficient {name}: ");
 
     let mut val = String::new();
@@ -31,7 +31,7 @@ fn get_coefficient_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> 
     }
 }
 
-fn get_coefficients_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
+fn get_coefs_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
     let contents = fs::read_to_string(filename)?;
     let mut values = contents.split_whitespace().map(str::parse);
 
@@ -53,7 +53,7 @@ fn main() {
         process::exit(1);
     } else if args.len() == 2 {
         let filename = &args[1];
-        match get_coefficients_from_file(filename) {
+        match get_coefs_from_file(filename) {
             Ok(vals) => vals,
             Err(err) => {
                 eprintln!("Error: {err}");
@@ -61,9 +61,9 @@ fn main() {
             }
         }
     } else {
-        let coefficient_names = ["a", "b", "c"];
-        let mut coefficients = coefficient_names.iter().map(|&name| loop {
-            match get_coefficient_from_stdin(name) {
+        let coef_names = ["a", "b", "c"];
+        let mut coefs = coef_names.iter().map(|&name| loop {
+            match get_coef_from_stdin(name) {
                 Ok(val) => break val,
                 Err(err) => {
                     eprintln!("Error: {err}")
@@ -71,9 +71,9 @@ fn main() {
             }
         });
         (
-            coefficients.next().expect("Should have coefficient a"),
-            coefficients.next().expect("Should have coefficient b"),
-            coefficients.next().expect("Should have coefficient c"),
+            coefs.next().expect("Should have coefficient a"),
+            coefs.next().expect("Should have coefficient b"),
+            coefs.next().expect("Should have coefficient c"),
         )
     };
 
