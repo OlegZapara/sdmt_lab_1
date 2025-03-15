@@ -48,17 +48,18 @@ fn get_coefs_from_stdin() -> (f64, f64, f64) {
 }
 
 fn get_coefs_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
-    let contents = fs::read_to_string(filename)?;
-    let mut values = contents.split_whitespace().map(str::parse);
-
-    let a = values.next().ok_or("missing coefficient a")??;
-    if a == 0.0 {
-        return Err("coefficient a should be non-zero".into());
+    let coefs: Vec<f64> = fs::read_to_string(filename)?
+        .split_whitespace()
+        .map(str::parse)
+        .collect::<Result<_, _>>()?;
+    let count = coefs.len();
+    if count != 3 {
+        return Err(format!("expected 3 coefficients, found {count}").into());
     }
-    let b = values.next().ok_or("missing coefficient b")??;
-    let c = values.next().ok_or("missing coefficient c")??;
-
-    Ok((a, b, c))
+    match coefs[0] {
+        0.0 => Err("coefficient a should be non-zero".into()),
+        _ => Ok((coefs[0], coefs[1], coefs[2])),
+    }
 }
 
 fn main() {
