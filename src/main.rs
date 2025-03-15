@@ -32,20 +32,19 @@ fn get_coef_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> {
 }
 
 fn get_coefs_from_stdin() -> (f64, f64, f64) {
-    let coef_names = ["a", "b", "c"];
-    let mut coefs = coef_names.iter().map(|&name| loop {
-        match get_coef_from_stdin(name) {
-            Ok(val) => break val,
-            Err(err) => {
-                eprintln!("Error: {err}")
+    let names = ["a", "b", "c"];
+    let coefs: Vec<f64> = names
+        .iter()
+        .map(|&name| loop {
+            match get_coef_from_stdin(name) {
+                Ok(val) => break val,
+                Err(err) => {
+                    eprintln!("Error: {err}")
+                }
             }
-        }
-    });
-    (
-        coefs.next().expect("Should have coefficient a"),
-        coefs.next().expect("Should have coefficient b"),
-        coefs.next().expect("Should have coefficient c"),
-    )
+        })
+        .collect();
+    (coefs[0], coefs[1], coefs[2])
 }
 
 fn get_coefs_from_file(filename: &str) -> Result<(f64, f64, f64), Box<dyn error::Error>> {
