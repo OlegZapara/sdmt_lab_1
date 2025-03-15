@@ -24,10 +24,9 @@ fn get_coef_from_stdin(name: &str) -> Result<f64, Box<dyn error::Error>> {
     io::stdin().read_line(&mut val)?;
 
     let val: f64 = val.trim().parse()?;
-    if name == "a" && val == 0.0 {
-        Err("coefficient a should be non-zero".into())
-    } else {
-        Ok(val)
+    match (name, val) {
+        ("a", 0.0) => Err("coefficient a should be non-zero".into()),
+        _ => Ok(val),
     }
 }
 
