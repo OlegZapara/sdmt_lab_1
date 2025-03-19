@@ -90,4 +90,6 @@ fn main() {
         (Some(x1), Some(x2)) => println!("There are two real roots: {x1} and {x2}"),
         _ => unreachable!("Unexpected root combination"),
     }
+
+    println!("Hello, Vitalii! 👋");
 }
